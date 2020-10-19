@@ -18,40 +18,38 @@ class SpeedOMeter extends StatefulWidget {
   ThemeData themeData;
 
   PublishSubject<double> eventObservable;
+  PublishSubject<double> eventObservableStop;
+
   SpeedOMeter(
       {this.start,
       this.end,
       this.highlightStart,
       this.highlightEnd,
       this.themeData,
-      this.eventObservable}) {}
+      this.eventObservable,
+      this.eventObservableStop}) {}
 
-  @override
-  _SpeedOMeterState createState() => new _SpeedOMeterState(this.start, this.end,
+  SpeedOMeterState createState() => new SpeedOMeterState(this.start, this.end,
       this.highlightStart, this.highlightEnd, this.eventObservable);
-
-  @override
-  void dispose(){
-    _SpeedOMeterState.percentageAnimationController.dispose();
-    super.dispose();
-  }    
 }
 
-class _SpeedOMeterState extends State<SpeedOMeter>
+class SpeedOMeterState extends State<SpeedOMeter>
     with TickerProviderStateMixin {
   int start;
   int end;
   double highlightStart;
   double highlightEnd;
   PublishSubject<double> eventObservable;
+  PublishSubject<double> eventObservableStop;
 
   double val = 0.0;
   double newVal;
   double textVal = 0.0;
   AnimationController percentageAnimationController;
   StreamSubscription<double> subscription;
+  StreamSubscription<double> subscriptionStop;
 
-  _SpeedOMeterState(int start, int end, double highlightStart,
+  SpeedOMeterState(int start, int end, double highlightStart,
       double highlightEnd, PublishSubject<double> eventObservable) {
     this.start = start;
     this.end = end;
@@ -69,6 +67,10 @@ class _SpeedOMeterState extends State<SpeedOMeter>
     subscription = this.eventObservable.listen((value) {
       textVal = value;
       (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
+    });
+    subscriptionStop = this.eventObservableStop.listen((value) {
+      this.eventObservable.close();
+      percentageAnimationController.dispose();
     }); //(value) => reloadData(value));
   }
 
