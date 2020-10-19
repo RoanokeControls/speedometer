@@ -82,8 +82,7 @@ class _SpeedOMeterState extends State<SpeedOMeter>
     });
 
     subscriptionStop = this.eventObservableStop.listen((value) {
-      print("Closing observable, disposing controller");
-      this.eventObservable.close();
+      print("Disposing controller");
       percentageAnimationController.dispose();
     }); //(value) => reloadData(value));
   }
