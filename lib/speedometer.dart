@@ -29,6 +29,12 @@ class SpeedOMeter extends StatefulWidget {
   @override
   _SpeedOMeterState createState() => new _SpeedOMeterState(this.start, this.end,
       this.highlightStart, this.highlightEnd, this.eventObservable);
+
+  @override
+  void dispose(){
+    _SpeedOMeterState.percentageAnimationController.dispose();
+    super.dispose();
+  }    
 }
 
 class _SpeedOMeterState extends State<SpeedOMeter>
