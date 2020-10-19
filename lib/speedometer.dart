@@ -29,8 +29,13 @@ class SpeedOMeter extends StatefulWidget {
       this.eventObservable,
       this.eventObservableStop}) {}
 
-  SpeedOMeterState createState() => new SpeedOMeterState(this.start, this.end,
-      this.highlightStart, this.highlightEnd, this.eventObservable);
+  SpeedOMeterState createState() => new SpeedOMeterState(
+      this.start,
+      this.end,
+      this.highlightStart,
+      this.highlightEnd,
+      this.eventObservable,
+      this.eventObservableStop);
 }
 
 class SpeedOMeterState extends State<SpeedOMeter>
@@ -49,8 +54,13 @@ class SpeedOMeterState extends State<SpeedOMeter>
   StreamSubscription<double> subscription;
   StreamSubscription<double> subscriptionStop;
 
-  SpeedOMeterState(int start, int end, double highlightStart,
-      double highlightEnd, PublishSubject<double> eventObservable) {
+  SpeedOMeterState(
+      int start,
+      int end,
+      double highlightStart,
+      double highlightEnd,
+      PublishSubject<double> eventObservable,
+      PublishSubject<double> eventObservableStop) {
     this.start = start;
     this.end = end;
     this.highlightStart = highlightStart;
@@ -69,6 +79,7 @@ class SpeedOMeterState extends State<SpeedOMeter>
       (value >= this.end) ? reloadData(this.end.toDouble()) : reloadData(value);
     });
     subscriptionStop = this.eventObservableStop.listen((value) {
+      print("Closing observable, disposing controller");
       this.eventObservable.close();
       percentageAnimationController.dispose();
     }); //(value) => reloadData(value));
